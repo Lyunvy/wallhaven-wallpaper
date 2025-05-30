@@ -1,0 +1,13 @@
+{
+  "api_url": "https://wallhaven.cc/api/v1/search",
+  "api_key": "",
+  "params": {
+    "q": "",
+    "categories": "111",
+    "purity": "111",
+    "sorting": "favorites",
+    "topRange": "",
+    "atleast": "3840x2160"
+  },
+  "interval_minutes": 10
+}
