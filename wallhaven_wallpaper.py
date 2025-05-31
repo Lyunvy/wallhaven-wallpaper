@@ -62,7 +62,8 @@ def load_config():
                 "purity": "111",
                 "sorting": "favorites",
                 "topRange": "",
-                "atleast": "3840x2160"
+                "atleast": "3840x2160",
+                "page": 15
             },
             "interval_minutes": 10
         }
@@ -154,7 +155,8 @@ def ensure_default_files():
             "purity": "111",
             "sorting": "favorites",
             "topRange": "",
-            "atleast": "3840x2160"
+            "atleast": "3840x2160",
+            "page": 15
         },
         "interval_minutes": 10
     }
