@@ -17,8 +17,6 @@ from io import BytesIO
 from urllib.parse import urlencode
 from datetime import datetime
 from PIL import Image, ImageDraw
-import tkinter as tk
-from tkinter import messagebox
 import shutil
 
 # 获取程序真实所在目录（支持pyinstaller打包和源码运行）
@@ -519,26 +517,44 @@ class WallpaperTrayApp:
     def show_config_window(self):
         """用记事本打开 config.json，编辑后弹窗提示并刷新配置"""
         def notify_and_reload():
-            root = tk.Tk()
-            root.withdraw()
-            messagebox.showinfo('提示', '已打开config.json，请手动编辑并保存。\n修改后点击“确定”刷新配置。')
-            root.destroy()
             try:
-                self.config = load_config()
-                self.interval = max(60, self.config.get('interval_minutes', 10) * 60)
-                logging.info('配置已刷新: %s', self.config)
+                try:
+                    import tkinter as tk
+                    from tkinter import messagebox
+                except ImportError:
+                    logging.error('未安装 tkinter，无法弹出提示窗口。')
+                    return
+                root = tk.Tk()
+                root.withdraw()
+                messagebox.showinfo('提示', '已打开config.json，请手动编辑并保存。\n修改后点击“确定”刷新配置。')
+                root.destroy()
+                try:
+                    self.config = load_config()
+                    self.interval = max(60, self.config.get('interval_minutes', 10) * 60)
+                    logging.info('配置已刷新: %s', self.config)
+                except Exception as e:
+                    logging.error('配置刷新失败', exc_info=True)
             except Exception as e:
-                logging.error('配置刷新失败', exc_info=True)
+                logging.error('弹窗提示失败', exc_info=True)
         try:
             os.startfile(CONFIG_PATH)
             logging.info('已打开config.json，请手动编辑并保存。')
             threading.Thread(target=notify_and_reload, daemon=True).start()
         except Exception as e:
             def show_error():
-                root = tk.Tk()
-                root.withdraw()
-                messagebox.showerror('错误', f'无法打开配置文件: {e}')
-                root.destroy()
+                try:
+                    try:
+                        import tkinter as tk
+                        from tkinter import messagebox
+                    except ImportError:
+                        logging.error('未安装 tkinter，无法弹出错误窗口。')
+                        return
+                    root = tk.Tk()
+                    root.withdraw()
+                    messagebox.showerror('错误', f'无法打开配置文件: {e}')
+                    root.destroy()
+                except Exception as e2:
+                    logging.error('弹窗错误提示失败', exc_info=True)
             logging.error('打开配置文件失败', exc_info=True)
             threading.Thread(target=show_error, daemon=True).start()
 
