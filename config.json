@@ -8,7 +8,8 @@
     "sorting": "favorites",
     "topRange": "",
     "atleast": "3840x2160",
-    "page": 15
+    "page": 1,
+    "max_page": 50
   },
   "interval_minutes": 10
 }
